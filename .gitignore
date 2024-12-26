@@ -1,0 +1,3 @@
+# Almacenar los PDF fuera de Git
+docs/*.pdf
+*mock*

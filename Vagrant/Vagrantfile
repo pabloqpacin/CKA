@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+cluster = {
+  "cka-vm" => { :ip => "192.168.1.201", :cpus => 2, :mem => 4096 },
+}
+Vagrant.configure("2") do |config|
+    config.vm.box = "generic/debian12"
+    cluster.each do |name, data|
+      config.vm.define name do |host|
+        host.vm.hostname = name
+        host.vm.network "public_network", ip: data[:ip], bridge: "enp4s0"
+        host.vm.provider :virtualbox do |vb, override|
+          vb.cpus = data[:cpus]
+          vb.memory = data[:mem]
+        end
+      end
+    end
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo ln -sf /usr/share/zoneinfo/Europe/Madrid /etc/localtime
+    SHELL
+    config.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
+      ansible.playbook = "playbook.yaml"
+    end
+  end
+
+# OJO: revisar POC_CICD_W1: kubeadm cluster...

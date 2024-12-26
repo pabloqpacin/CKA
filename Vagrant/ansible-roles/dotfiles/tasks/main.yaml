@@ -1,0 +1,5 @@
+---
+- ansible.builtin.include_tasks: 01-install.yaml
+- ansible.builtin.include_tasks: 02-dotfiles.yaml
+- ansible.builtin.include_tasks: 03-zsh.yaml
+# - ansible.builtin.include_tasks: 04-nvim.yaml

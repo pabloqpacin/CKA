@@ -1,0 +1,38 @@
+---
+# - name: Make apt verbose 1/2
+#   ansible.builtin.file:
+#     path: /etc/apt/apt.conf.d/99show-versions
+#     state: touch
+#     mode: '0644'
+
+- name: Make APT verbose
+  ansible.builtin.lineinfile:
+    dest: /etc/apt/apt.conf.d/99show-versions
+    line: 'APT::Get::Show-Versions "true";'
+    create: yes
+
+- name: Install fave packages
+  ansible.builtin.apt:
+    name:
+      - bat
+      - curl
+      - git
+      - grc
+      - htop
+      - jq
+      - lf
+      - nmap
+      # - pipx
+      - tmux
+      - vim
+      - tree
+      - zsh
+    state: present
+    update_cache: yes
+
+- name: Rename bat
+  ansible.builtin.file:
+    src: /usr/bin/batcat
+    dest: /usr/bin/bat
+    state: link
+    force: no

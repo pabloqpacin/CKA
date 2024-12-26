@@ -1,0 +1,5 @@
+- name: supdawg
+  ansible.posix.synchronize:
+    src: ../utils/scripts/
+    dest: /WIP
+    delete: false

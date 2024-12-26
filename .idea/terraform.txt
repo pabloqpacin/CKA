@@ -1,0 +1,8 @@
+https://registry.terraform.io/providers/terra-farm/virtualbox/latest/docs/resources/vm
+
+OK para crear
+
+y para configurar?
+Ansible?
+
+OJO con las limitaciones del `user_data`...

@@ -1,0 +1,8 @@
+https://github.com/pabloqpacin/tbok
+
+https://github.com/pabloqpacin/k8s-bs
+https://github.com/pabloqpacin/k8s-proper
+https://github.com/pabloqpacin/devops_101
+
+https://github.com/pabloqpacin/vagrant-kubeadm-kubernetes
+

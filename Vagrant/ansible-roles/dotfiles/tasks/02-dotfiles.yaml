@@ -1,0 +1,38 @@
+---
+- name: Lock dotfiles directory
+  ansible.builtin.stat:
+    path: /root/dotfiles
+  register: dotf_dir
+
+- name: Clone them dotfiles
+  ansible.builtin.git:
+    repo: 'https://github.com/pabloqpacin/dotfiles.git'
+    dest: /root/dotfiles
+    version: devel
+  when: not dotf_dir.stat.exists
+
+- name: Ensure ~/.config exists
+  ansible.builtin.file:
+    path: /root/.config
+    state: directory
+    mode: '0755'
+
+- name: Symlink bat, lf and tmux
+  ansible.builtin.file:
+    src: /root/dotfiles/.config/{{ item }}
+    dest: /root/.config/{{ item }}
+    state: link
+    force: no
+  loop:
+    - lf
+    - bat
+    - tmux
+
+- name: Symlink ~/.vimrc
+  ansible.builtin.shell: |
+    if [ ! -L /root/.vimrc ]; then
+      mv /root/.vimrc{,.bak}
+      ln -s /root/dotfiles/.vimrc /root/.vimrc
+    fi
+  args:
+    executable: /bin/bash
