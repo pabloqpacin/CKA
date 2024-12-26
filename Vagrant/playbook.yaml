@@ -1,0 +1,8 @@
+---
+- name: supdawg
+  hosts: cka-vm
+  become: true
+  roles:
+    - dotfiles
+    # - docker
+    - wip

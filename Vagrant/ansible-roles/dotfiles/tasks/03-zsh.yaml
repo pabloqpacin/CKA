@@ -1,0 +1,52 @@
+---
+- name: Install ~/.oh-my-zsh
+  ansible.builtin.shell: |
+    if [ ! -d /root/.oh-my-zsh ]; then
+      yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+  args:
+    executable: /bin/bash
+  environment:
+    ZSH: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    RUNZSH: "no"
+    KEEP_ZSHRC: "yes"
+
+- name: Backup vanilla ~/.zshrc
+  ansible.builtin.shell: |
+    if [ ! -L /root/.zshrc ]; then mv /root/.zshrc /root/.zshrc.bak; fi
+  args:
+    executable: /bin/bash
+
+- name: Symlink ~/.zshrc
+  ansible.builtin.file:
+    src: /root/dotfiles/.zshrc
+    dest: /root/.zshrc
+    state: link
+
+- name: Install zsh plugins
+  ansible.builtin.shell: |
+    if [ ! -d /root/dotfiles/zsh/plugins/zsh-* ]; then
+      {% for script in scripts %}
+      bash {{ script }}
+      {% endfor %}
+    fi
+  args:
+    executable: /bin/bash
+  vars:
+    scripts:
+      - /root/dotfiles/scripts/setup/omz-msg_random_theme.sh
+      - /root/dotfiles/zsh/plugins/clone-em.sh
+
+- name: Ensure zsh is the default shell
+  ansible.builtin.user:
+    name: root
+    shell: /usr/bin/zsh
+  become: true
+
+- name: Define zsh theme
+  ansible.builtin.shell: |
+    if ! grep 'ZSH_THEME=afowler' /root/.zshrc; then
+      sed -i '/ZSH_THEME_RANDOM_CANDIDATES/i\ZSH_THEME=afowler' /root/.zshrc
+    fi
+  args:
+    executable: /bin/bash
